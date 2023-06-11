@@ -21,7 +21,7 @@ connectToDatabase();
 app.use(express.json());
 app.use(cors());
 
-app.use("/app", authRouter);
+app.use("/", authRouter);
 
 APP_PORT = 4000;
 app.listen(APP_PORT, () => console.log(`App is running on port ${APP_PORT}`));
