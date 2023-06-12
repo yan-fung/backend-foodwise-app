@@ -2,6 +2,8 @@ const express = require("express");
 const authRouter = express.Router();
 const User = require("../models/SignUpModels");
 const bcryptjs = require("bcryptjs");
+const jsonwebtoken = require("jsonwebtoken");
+const isAuthenticated = require("../middlewares/jwt.middleware");
 
 authRouter.post("/signup", (req, res) => {
   const { username, email, password } = req.body;
@@ -43,8 +45,41 @@ authRouter.post("/signup", (req, res) => {
   });
 });
 
-authRouter.post("/login", (req, res) => {});
+authRouter.post("/login", (req, res) => {
+  const { email, password } = req.body;
 
-authRouter.get("/verify", (req, res) => {});
+  if (email === "" || password === "")
+    return res.status(400).json({ err: "Please enter an email and password" });
+
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return res.status(400).json({ err: "Invalid credentials" });
+      } else {
+        const passwordMatch = bcryptjs.compareSync(password, user.password);
+        if (!passwordMatch) {
+          return res.status(400).json({ err: "Invalid credentials" });
+        }
+        const payload = {
+          name: user.name,
+          email: user.email,
+          id: user._id,
+        };
+
+        const token = jsonwebtoken.sign(payload, process.env.TOKEN_SECRET, {
+          expiresIn: "7d",
+        });
+        console.log(token);
+        res.status(200).json({ token });
+      }
+    })
+    .catch((err) => {
+      res.status(400).json({ err: "Something went wrong" });
+    });
+});
+
+authRouter.get("/verify", isAuthenticated, (req, res) => {
+  res.status(200).json(req.user);
+});
 
 module.exports = authRouter;
