@@ -61,7 +61,7 @@ authRouter.post("/login", (req, res) => {
           return res.status(400).json({ err: "Invalid credentials" });
         }
         const payload = {
-          name: user.name,
+          name: user.username,
           email: user.email,
           id: user._id,
         };
@@ -69,6 +69,7 @@ authRouter.post("/login", (req, res) => {
         const token = jsonwebtoken.sign(payload, process.env.TOKEN_SECRET, {
           expiresIn: "7d",
         });
+        console.log(payload);
         console.log(token);
         res.status(200).json({ token });
       }
