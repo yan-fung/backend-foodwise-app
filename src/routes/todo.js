@@ -19,7 +19,7 @@ todoRouter.get("/getTodo", isAuthenticated, async (req, res) => {
 todoRouter.put("/createTodo", (req, res) => {
   const todo = new Todo({
     text: req.body.text,
-    done: false,
+    wasted: false,
     user: req.body.userID,
   });
   todo.save().then((todo) => {
