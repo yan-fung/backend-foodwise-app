@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const authRouter = require("./src/routes/auth.js");
 const todoRouter = require("./src/routes/todo.js");
+const countRouter = require("./src/routes/count.js");
 
 dotenv.config();
 const connectToDatabase = async () => {
@@ -24,6 +25,7 @@ app.use(cors());
 
 app.use("/", authRouter);
 app.use("/", todoRouter);
+app.use("/", countRouter);
 
 APP_PORT = 4000;
 app.listen(APP_PORT, () => console.log(`App is running on port ${APP_PORT}`));
