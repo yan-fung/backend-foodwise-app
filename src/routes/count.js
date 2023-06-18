@@ -4,14 +4,15 @@ const Todo = require("../models/Todo");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 
-//Update the wasted value from false to true
+//Update the wasted and display value
 countRouter.put("/count/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { wasted } = req.body;
+    const { wasted, display } = req.body;
 
     const item = await Todo.findById(id);
     item.wasted = wasted;
+    item.display = display;
 
     await item.save();
 
@@ -36,6 +37,11 @@ countRouter.get("/count/:userID", async (req, res) => {
         $match: {
           user: new ObjectId(userID),
           wasted: true,
+          date: {
+            $gte: new Date(Date.now() - 24 * 60 * 60 * 1000),
+            $lt: new Date(),
+          },
+          //date: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } 7 days
         },
       },
       { $group: { _id: null, count: { $sum: 1 } } },
