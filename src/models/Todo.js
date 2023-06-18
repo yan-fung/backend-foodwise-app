@@ -8,13 +8,21 @@ const TodoSchema = new mongoose.Schema({
   wasted: {
     type: Boolean,
   },
-  date: {
+  expirydate: {
     type: Date,
   },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     require: true,
+  },
+  display: {
+    type: Boolean,
+    default: true,
+  },
+  date: {
+    type: Date,
+    default: Date.now,
   },
 });
 
