@@ -6,13 +6,20 @@ const isAuthenticated = require("../middlewares/jwt.middleware");
 
 //Get todos
 todoRouter.get("/getTodo", isAuthenticated, async (req, res) => {
-  console.log(req.user);
-  const todos = await Todo.find({ user: req.user.id });
-  res.status(200).json({
-    success: true,
-    message: "successfully retrieved",
-    todos,
-  });
+  try {
+    const todos = await Todo.find({ user: req.user.id, display: true });
+    res.status(200).json({ message: "Successfully retrieved", todos });
+  } catch (err) {
+    res.status(401).json({ success: false, message: err.message });
+  }
+
+  // console.log(req.user);
+  // const todos = await Todo.find({ user: req.user.id });
+  // res.status(200).json({
+  //   success: true,
+  //   message: "successfully retrieved",
+  //   todos,
+  // });
 });
 
 //Create todo
@@ -27,21 +34,18 @@ todoRouter.put("/createTodo", (req, res) => {
   });
 });
 
-//Delete todo
-todoRouter.delete("/deleteTodo/:todoId", async (req, res) => {
+//Update the display value as false
+todoRouter.put("/deleteTodo/:todoId", async (req, res) => {
   try {
-    const todoId = req.params.todoId;
-    console.log(todoId);
-    const checkToExists = await Todo.findById(todoId);
-    if (!checkToExists) {
-      throw new Error("No such todo exists");
-    }
-    const deletedTodo = await Todo.findByIdAndDelete(todoId);
-    res.status(200).json({
-      success: true,
-      message: "Successfully deleted todo",
-      deletedTodo,
-    });
+    const { todoId } = req.params;
+    const { display } = req.body;
+
+    const result = await Todo.findById(todoId);
+    result.display = display;
+
+    await result.save();
+
+    res.status(201).json({ result });
   } catch (err) {
     res.status(401).json({ success: false, message: err.message });
   }
