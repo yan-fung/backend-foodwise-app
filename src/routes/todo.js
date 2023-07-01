@@ -26,6 +26,7 @@ todoRouter.get("/getTodo", isAuthenticated, async (req, res) => {
 todoRouter.put("/createTodo", (req, res) => {
   const todo = new Todo({
     text: req.body.text,
+    expirydate: req.body.selectedDate,
     wasted: false,
     user: req.body.userID,
   });
