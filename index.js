@@ -21,11 +21,15 @@ const connectToDatabase = async () => {
 connectToDatabase();
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://react-foodwise-app.vercel.app/"],
+  })
+);
 
-app.use("https://foodwise-api.onrender.com/", authRouter);
-app.use("https://foodwise-api.onrender.com/", todoRouter);
-app.use("https://foodwise-api.onrender.com/", countRouter);
+app.use("/", authRouter);
+app.use("/", todoRouter);
+app.use("/", countRouter);
 
 APP_PORT = 4000;
 app.listen(APP_PORT, () => console.log(`App is running on port ${APP_PORT}`));
