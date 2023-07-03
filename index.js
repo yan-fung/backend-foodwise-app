@@ -6,7 +6,7 @@ const cors = require("cors");
 const authRouter = require("./src/routes/auth.js");
 const todoRouter = require("./src/routes/todo.js");
 const countRouter = require("./src/routes/count.js");
-const rootUrl = "https://react-foodwise-app.vercel.app/";
+const path = require("path");
 
 dotenv.config();
 const connectToDatabase = async () => {
@@ -23,10 +23,14 @@ connectToDatabase();
 
 app.use(express.json());
 app.use(cors());
+// // only when ready to deploy
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "./client/build", "index.html"));
+// });
 
-app.use(`${rootUrl}`, authRouter);
-app.use(`${rootUrl}`, todoRouter);
-app.use(`${rootUrl}`, countRouter);
+app.use("/", authRouter);
+app.use("/", todoRouter);
+app.use("/", countRouter);
 
-APP_PORT = 4000;
+APP_PORT = process.env.PORT || 4000;
 app.listen(APP_PORT, () => console.log(`App is running on port ${APP_PORT}`));
