@@ -27,10 +27,15 @@ app.use(cors());
 // app.get("*", (req, res) => {
 //   res.sendFile(path.join(__dirname, "./client/build", "index.html"));
 // });
+app.use(express.static(path.join(__dirname, "build")));
+
+app.get("/", function (req, res) {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 app.use("/", authRouter);
 app.use("/", todoRouter);
 app.use("/", countRouter);
 
-APP_PORT = process.env.PORT || 4000;
+APP_PORT = process.env.PORT || 3030;
 app.listen(APP_PORT, () => console.log(`App is running on port ${APP_PORT}`));
