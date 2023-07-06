@@ -32,13 +32,19 @@ countRouter.get("/count/:userID", async (req, res) => {
       res.status(404).send("User not found");
     }
 
+    const startOfWeek = new Date();
+    startOfWeek.setHours(0, 0, 0, 0);
+    startOfWeek.setDate(
+      startOfWeek.getDate() - ((startOfWeek.getDay() + 6) % 7)
+    );
+
     const pipeline = [
       {
         $match: {
           user: new ObjectId(userID),
           wasted: true,
           date: {
-            $gte: new Date(Date.now() - 24 * 60 * 60 * 1000),
+            $gte: startOfWeek,
             $lt: new Date(),
           },
           //date: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) } 7 days
