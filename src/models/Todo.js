@@ -20,6 +20,9 @@ const TodoSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  wastedDate: {
+    type: Date,
+  },
   date: {
     type: Date,
     default: Date.now,

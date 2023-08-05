@@ -4,7 +4,7 @@ const Todo = require("../models/Todo");
 const mongoose = require("mongoose");
 const ObjectId = mongoose.Types.ObjectId;
 
-//Update the wasted and display value
+//Update the wasted, display and date value
 countRouter.put("/count/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -43,7 +43,7 @@ countRouter.get("/count/:userID", async (req, res) => {
         $match: {
           user: new ObjectId(userID),
           wasted: true,
-          date: {
+          wastedDate: {
             $gte: startOfWeek,
             $lt: new Date(),
           },

@@ -4,6 +4,8 @@ const todoRouter = express.Router();
 const Todo = require("../models/Todo");
 const isAuthenticated = require("../middlewares/jwt.middleware");
 
+console.log("To do schema");
+
 //Get todos
 todoRouter.get("/getTodo", isAuthenticated, async (req, res) => {
   try {
@@ -28,6 +30,7 @@ todoRouter.put("/createTodo", (req, res) => {
     text: req.body.text,
     expirydate: req.body.selectedDate,
     wasted: false,
+    wastedDate: Date.now(),
     user: req.body.userID,
   });
   todo.save().then((todo) => {
